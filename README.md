@@ -10,7 +10,7 @@ mkdir -p ~/.gvm/versions
 ##  编译安装
 
 ```
-go install github.com/moovweb/gvm@latest
+go install github.com/aide-cloud/gvm@latest
 ```
 
 ## 常用命令
