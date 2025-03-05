@@ -23,8 +23,13 @@ package cmd
 
 import (
 	"os"
+	"path"
 
 	"github.com/spf13/cobra"
+)
+
+var (
+	rootPath = path.Join(os.Getenv("HOME"), "gvm")
 )
 
 // rootCmd represents the base command when called without any subcommands

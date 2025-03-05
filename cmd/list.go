@@ -65,6 +65,22 @@ func LocalVersions() {
 	showVersions(versions)
 }
 
+func getLastVersion() string {
+	versions := internal.FetchGoVersions()
+	list := make([]string, 0, len(versions))
+	for version := range versions {
+		list = append(list, version)
+	}
+	// 排序
+	sortVersions(list)
+	for _, s := range list {
+		if len(strings.Split(s, ".")) == 3 {
+			return s
+		}
+	}
+	return ""
+}
+
 func showVersions(list []string) {
 	// 排序
 	sortVersions(list)
@@ -81,7 +97,7 @@ func showVersions(list []string) {
 		}
 		return
 	}
-	if !versionAll {
+	if !versionAll && len(list) > 10 {
 		list = list[:10]
 	}
 	for _, s := range list {
