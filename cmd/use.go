@@ -109,6 +109,10 @@ func updateZshrc(newGOROOT string) error {
 	if err := os.WriteFile(zshrcPath, []byte(content), 0644); err != nil {
 		return err
 	}
+	defer func() {
+		fmt.Println("请执行以下命令，使 GOROOT 立即生效：")
+		fmt.Println("source ~/.zshrc")
+	}()
 
 	// 执行 source ~/.zshrc 来使配置生效
 	return exec.Command("zsh", "-c", fmt.Sprintf("source ~/%s", filename)).Run()
