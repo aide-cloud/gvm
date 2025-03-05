@@ -81,10 +81,11 @@ func getLastVersion() string {
 	return ""
 }
 
-func showVersions(list []string) {
+func showVersions(list []string, currentVersion ...string) {
 	// 排序
 	sortVersions(list)
 
+	versions := make([]string, 0, len(list))
 	// 如果versionFlag不为空，则只列出versionFlag对应的版本号
 	if versionFlag != "" {
 		versionFlag = strings.TrimPrefix(versionFlag, "go")
@@ -92,7 +93,7 @@ func showVersions(list []string) {
 		versionFlag = strings.TrimPrefix(versionFlag, "V")
 		for _, s := range list {
 			if strings.HasPrefix(s, versionFlag) {
-				fmt.Println(s)
+				versions = append(versions, s)
 			}
 		}
 		return
@@ -101,8 +102,13 @@ func showVersions(list []string) {
 		list = list[:10]
 	}
 	for _, s := range list {
-		fmt.Println(s)
+		if len(currentVersion) > 0 && s == currentVersion[0] {
+			versions = append(versions, "* "+s)
+		} else {
+			versions = append(versions, "  "+s)
+		}
 	}
+	fmt.Println(strings.Join(versions, "\n"))
 }
 
 // 对 Go 版本号进行排序（从大到小）

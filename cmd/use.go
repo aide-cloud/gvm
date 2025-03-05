@@ -51,14 +51,20 @@ func useGoVersion(version string) {
 	}
 }
 
-// updateZshrc 更新 ~/.zshrc 文件中的 GOROOT 设置
-func updateZshrc(newGOROOT string) error {
+func getZshrcPath() string {
 	filename := ".zshrc"
 	usr, err := user.Current()
 	if err != nil {
-		return err
+		panic(err)
 	}
-	zshrcPath := filepath.Join(usr.HomeDir, filename)
+	return filepath.Join(usr.HomeDir, filename)
+}
+
+// updateZshrc 更新 ~/.zshrc 文件中的 GOROOT 设置
+func updateZshrc(newGOROOT string) error {
+	filename := ".zshrc"
+
+	zshrcPath := getZshrcPath()
 
 	// 如果文件不存在则创建文件
 	if _, err := os.Stat(zshrcPath); os.IsNotExist(err) {
