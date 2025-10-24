@@ -21,8 +21,35 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/aide-cloud/gvm/cmd"
+import (
+	"os"
+
+	"github.com/spf13/cobra"
+
+	"github.com/aide-cloud/gvm/cmd"
+	"github.com/aide-cloud/gvm/cmd/install"
+	"github.com/aide-cloud/gvm/cmd/list"
+	"github.com/aide-cloud/gvm/cmd/ls"
+	"github.com/aide-cloud/gvm/cmd/uninstall"
+	"github.com/aide-cloud/gvm/cmd/use"
+	"github.com/aide-cloud/gvm/pkg/log"
+)
 
 func main() {
-	cmd.Execute()
+	rootCmd := cmd.NewCmd()
+
+	commands := []*cobra.Command{
+		list.NewListCmd(),
+		ls.NewLsCmd(),
+		install.NewInstallCmd(),
+		uninstall.NewUninstallCmd(),
+		use.NewUseCmd(),
+	}
+
+	rootCmd.AddCommand(commands...)
+
+	if err := rootCmd.Execute(); err != nil {
+		log.Error("Failed to execute root command", "error", err)
+		os.Exit(1)
+	}
 }

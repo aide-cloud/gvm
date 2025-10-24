@@ -35,3 +35,17 @@ gvm use 1.21.0
 # 列出已使用版本
 gvm ls
 ```
+
+## API
+
+```bash
+https://dl.google.com/go/go1.25.2.darwin-amd64.tar.gz
+```
+
+```bash
+https://mirrors.aliyun.com/golang/go1.25.2.darwin-amd64.tar.gz
+```
+
+```bash
+https://go.dev/dl/?mode=json&include=all
+```
