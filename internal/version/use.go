@@ -10,7 +10,7 @@ import (
 	"github.com/aide-cloud/gvm/pkg/log"
 )
 
-func Use(version, sdkDir string, isEval bool) error {
+func Use(version, sdkDir, localVersionFilePath string, isEval bool) error {
 	sdkDir = dir.ExpandHomeDir(sdkDir)
 	sdkFilePath := filepath.Join(sdkDir, version)
 	exist, err := dir.CheckFileExists(sdkFilePath)
@@ -59,6 +59,12 @@ func Use(version, sdkDir string, isEval bool) error {
 		fmt.Printf("source %s\n", shellConfigPath)
 	} else {
 		fmt.Printf("execute command:\n\t eval \"source %s\"\n", shellConfigPath)
+	}
+
+	// 写入版本文件
+	if err := os.WriteFile(localVersionFilePath, []byte(version), 0644); err != nil {
+		log.Error("Failed to write version file:", "error", err)
+		return err
 	}
 	return nil
 }

@@ -14,30 +14,33 @@ import (
 )
 
 const (
-	defaultSdkDir          = "~/.gvm/sdk"
-	defaultCacheDir        = "~/.gvm/cache"
-	defaultOriginURL       = "https://go.dev/dl/?mode=json&include=all"
-	defaultDownloadURL     = "https://dl.google.com/go/"
-	defaultVersionFilePath = "~/.gvm/versions.json"
+	DefaultSdkDir               = "~/go/sdk"
+	DefaultCacheDir             = "~/.gvm/cache"
+	DefaultOriginURL            = "https://go.dev/dl/?mode=json&include=all"
+	DefaultDownloadURL          = "https://dl.google.com/go/"
+	DefaultVersionFilePath      = "~/.gvm/versions.json"
+	DefaultLocalVersionFilePath = "~/.gvm/version"
 )
 
 type Version struct {
-	sdkDir          string
-	cacheDir        string
-	versionFilePath string
-	originURL       string
-	downloadURL     string
+	sdkDir               string
+	cacheDir             string
+	versionFilePath      string
+	localVersionFilePath string
+	originURL            string
+	downloadURL          string
 }
 
 type VersionOption func(*Version)
 
 func NewVersion(opts ...VersionOption) *Version {
 	v := &Version{
-		sdkDir:          dir.ExpandHomeDir(defaultSdkDir),
-		cacheDir:        dir.ExpandHomeDir(defaultCacheDir),
-		versionFilePath: dir.ExpandHomeDir(defaultVersionFilePath),
-		originURL:       defaultOriginURL,
-		downloadURL:     defaultDownloadURL,
+		sdkDir:               dir.ExpandHomeDir(DefaultSdkDir),
+		cacheDir:             dir.ExpandHomeDir(DefaultCacheDir),
+		versionFilePath:      dir.ExpandHomeDir(DefaultVersionFilePath),
+		localVersionFilePath: dir.ExpandHomeDir(DefaultLocalVersionFilePath),
+		originURL:            DefaultOriginURL,
+		downloadURL:          DefaultDownloadURL,
 	}
 	for _, opt := range opts {
 		opt(v)
@@ -57,6 +60,11 @@ func NewVersion(opts ...VersionOption) *Version {
 	if _, err := os.Stat(versionFileDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(versionFileDir, 0755); err != nil {
 			log.Error("Failed to create version file directory:", "error", err)
+		}
+	}
+	if _, err := os.Stat(v.localVersionFilePath); os.IsNotExist(err) {
+		if err := os.WriteFile(v.localVersionFilePath, []byte(""), 0644); err != nil {
+			log.Error("Failed to create local version file:", "error", err)
 		}
 	}
 	// 检查sdk目前权限，如果权限不正确，则设置为755
@@ -97,7 +105,7 @@ func (v *Version) Use(targetVersion string, isForce, isEval bool) {
 			return
 		}
 	}
-	if err := Use(version, v.sdkDir, isEval); err != nil {
+	if err := Use(version, v.sdkDir, v.localVersionFilePath, isEval); err != nil {
 		log.Error("Failed to use version:", "error", err)
 		return
 	}
@@ -170,7 +178,16 @@ func (v *Version) Ls() {
 		log.Info("No local versions found")
 		return
 	}
-	fmt.Println(strings.Join(vs, "\n"))
+	// 读取本地版本文件
+	content, _ := os.ReadFile(v.localVersionFilePath)
+	localVersion := string(content)
+	for _, v := range vs {
+		if v == localVersion {
+			fmt.Println("*", v)
+		} else {
+			fmt.Println(" ", v)
+		}
+	}
 }
 
 func (v *Version) List(isLatest bool, showNumber int, forceUpdate bool) {

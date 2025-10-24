@@ -36,7 +36,7 @@ func FetchOriginVersions(originURL, versionFilePath string, forceUpdate bool) ([
 		}
 		if len(content) > 0 {
 			if err = json.Unmarshal(content, &originVersions); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal the version file: %v", err)
+				_ = os.Remove(versionFilePath)
 			}
 		}
 		if len(originVersions) > 0 {
