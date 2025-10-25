@@ -25,6 +25,8 @@ examples and usage of using your application.`,
 		},
 	}
 
+	InitFlags(rootCmd)
+
 	// Set custom help template to display commands in groups
 	rootCmd.SetHelpTemplate(customHelpTemplate)
 	rootCmd.SetUsageTemplate(customUsageTemplate)

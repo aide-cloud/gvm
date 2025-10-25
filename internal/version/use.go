@@ -49,7 +49,7 @@ func Use(version, sdkDir, localVersionFilePath string, isEval bool) error {
 	if gorootRegex.Match(shellConfig) {
 		shellConfig = gorootRegex.ReplaceAll(shellConfig, []byte(exportGOROOT))
 	} else {
-		shellConfig = append(shellConfig, []byte(exportGOROOT)...)
+		shellConfig = append(shellConfig, []byte("\n"+exportGOROOT)...)
 	}
 	if err := os.WriteFile(shellConfigPath, []byte(shellConfig), 0644); err != nil {
 		return err
