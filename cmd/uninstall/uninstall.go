@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/aide-cloud/gvm/cmd"
-	"github.com/aide-cloud/gvm/internal/version"
 	"github.com/spf13/cobra"
 )
 
@@ -54,11 +53,6 @@ func (u *uninstallCmdFlags) initFlags(c *cobra.Command) {
 
 func (u *uninstallCmdFlags) uninstall() {
 	u.GlobalFlags = cmd.GetGlobalFlags()
-	v := version.NewVersion(
-		version.WithSdkDir(u.SdkDir),
-		version.WithCacheDir(u.CacheDir),
-		version.WithOriginURL(u.OriginURL),
-		version.WithDownloadURL(u.DownloadURL),
-	)
+	v := cmd.NewVersionManager()
 	v.Uninstall(u.version)
 }

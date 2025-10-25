@@ -2,7 +2,6 @@ package list
 
 import (
 	"github.com/aide-cloud/gvm/cmd"
-	"github.com/aide-cloud/gvm/internal/version"
 	"github.com/spf13/cobra"
 )
 
@@ -48,11 +47,6 @@ func (l *listCmdFlags) initFlags(c *cobra.Command) {
 
 func (l *listCmdFlags) versions() {
 	l.GlobalFlags = cmd.GetGlobalFlags()
-	v := version.NewVersion(
-		version.WithSdkDir(l.SdkDir),
-		version.WithCacheDir(l.CacheDir),
-		version.WithOriginURL(l.OriginURL),
-		version.WithDownloadURL(l.DownloadURL),
-	)
+	v := cmd.NewVersionManager()
 	v.List(l.latest, l.number, l.forceUpdate)
 }

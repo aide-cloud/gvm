@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/aide-cloud/gvm/cmd"
-	"github.com/aide-cloud/gvm/internal/version"
 )
 
 func NewInstallCmd() *cobra.Command {
@@ -57,11 +56,6 @@ func (i *installCmdFlags) initFlags(c *cobra.Command) {
 
 func (i *installCmdFlags) install() {
 	i.GlobalFlags = cmd.GetGlobalFlags()
-	v := version.NewVersion(
-		version.WithSdkDir(i.SdkDir),
-		version.WithCacheDir(i.CacheDir),
-		version.WithOriginURL(i.OriginURL),
-		version.WithDownloadURL(i.DownloadURL),
-	)
+	v := cmd.NewVersionManager()
 	v.Install(i.version, i.isForce)
 }

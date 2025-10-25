@@ -286,3 +286,15 @@ func WithDownloadURL(downloadURL string) VersionOption {
 		v.downloadURL = downloadURL
 	}
 }
+
+func WithLocalVersionFilePath(localVersionFilePath string) VersionOption {
+	return func(v *Version) {
+		v.localVersionFilePath = dir.ExpandHomeDir(localVersionFilePath)
+	}
+}
+
+func WithVersionFilePath(versionFilePath string) VersionOption {
+	return func(v *Version) {
+		v.versionFilePath = dir.ExpandHomeDir(versionFilePath)
+	}
+}

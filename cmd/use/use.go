@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/aide-cloud/gvm/cmd"
-	"github.com/aide-cloud/gvm/internal/version"
 	"github.com/spf13/cobra"
 )
 
@@ -57,11 +56,6 @@ func (u *useCmdFlags) initFlags(c *cobra.Command) {
 
 func (u *useCmdFlags) use() {
 	u.GlobalFlags = cmd.GetGlobalFlags()
-	v := version.NewVersion(
-		version.WithSdkDir(u.SdkDir),
-		version.WithCacheDir(u.CacheDir),
-		version.WithOriginURL(u.OriginURL),
-		version.WithDownloadURL(u.DownloadURL),
-	)
+	v := cmd.NewVersionManager()
 	v.Use(u.version, u.isForce, u.Eval)
 }

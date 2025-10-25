@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/aide-cloud/gvm/internal/version"
 	"github.com/aide-cloud/gvm/pkg/env"
 	"github.com/aide-cloud/gvm/pkg/log"
 )
@@ -33,4 +34,15 @@ func InitFlags(cmd *cobra.Command) {
 func GetGlobalFlags() GlobalFlags {
 	log.SetPrintEnable(!globalFlags.Eval)
 	return globalFlags
+}
+
+func NewVersionManager() *version.Version {
+	return version.NewVersion(
+		version.WithSdkDir(globalFlags.SdkDir),
+		version.WithCacheDir(globalFlags.CacheDir),
+		version.WithOriginURL(globalFlags.OriginURL),
+		version.WithDownloadURL(globalFlags.DownloadURL),
+		version.WithVersionFilePath(globalFlags.VersionFilePath),
+		version.WithLocalVersionFilePath(globalFlags.LocalVersionFile),
+	)
 }
